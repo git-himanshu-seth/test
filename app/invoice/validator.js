@@ -1,22 +1,20 @@
 const joi = require('joi');
-const { validate } = require('../../utils/validate');
+const { validate, validateObjectId } = require('../../utils/validate');
 
-const invoiceItemSchemaJoi = joi.object({
-  productId: joi
-    .string()
-    .pattern(/^[0-9a-fA-F]{24}$/)
-    .required(),
-  rate: joi.number().required(),
-  unit: joi.string().required(),
-  qty: joi.number().required(),
-  disc: joi.number().optional(),
-  netAmount: joi.number().required(),
-  totalAmount: joi.number().required(),
-});
 exports.createValidator = validate(
-  joi.object({
-    customerName: joi.string().trim().required(),
-    totalAmount: joi.number().required(),
-    products: joi.array().items(invoiceItemSchemaJoi).required(),
-  }),
+  joi
+    .array()
+    .items(
+      joi.object({
+        customerName: joi.string().min(3).max(50).required(),
+        product: joi.custom(validateObjectId).required(),
+        rate: joi.number().min(0).required(),
+        unit: joi.string().valid('single', 'multiple').required(),
+        quantity: joi.number().integer().min(1).required(),
+        discount: joi.number().min(0).max(100).default(0),
+        netAmount: joi.number().precision(2).required(),
+        totalAmount: joi.number().precision(2).required(),
+      }),
+    )
+    .min(1),
 );

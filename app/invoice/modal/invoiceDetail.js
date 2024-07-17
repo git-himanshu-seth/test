@@ -1,18 +1,18 @@
 const mongoose = require('mongoose');
 
-const invoiceDetailsSchema = new mongoose.Schema(
+const invoiceDetailSchema = new mongoose.Schema(
   {
-    invoicedetailId: {
+    invoicedetail_id: {
       type: mongoose.Schema.Types.ObjectId,
     },
-    invoiceId: {
+    invoice_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Invoice',
-      required: [true, 'Invoice id is required.'],
+      ref: 'InvoiceMaster',
+      required: [true, 'InvoiceMaster id is required.'],
     },
-    productId: {
+    product_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Invoice',
+      ref: 'Product',
       required: [true, 'Product id is required.'],
     },
     rate: {
@@ -23,11 +23,11 @@ const invoiceDetailsSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Unit is required.'],
     },
-    qty: {
+    quantity: {
       type: Number,
       required: [true, 'Quantity is required.'],
     },
-    disc: {
+    discountPercentage: {
       type: Number,
       required: [true, 'Discount is required.'],
     },
@@ -42,12 +42,12 @@ const invoiceDetailsSchema = new mongoose.Schema(
   },
   { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } },
 );
-invoiceDetailsSchema.pre('save', function (next) {
+
+invoiceDetailSchema.pre('save', function (next) {
   if (!this.invoicedetail_id) {
     this.invoicedetail_id = this._id;
   }
   next();
 });
-const InvoiceDetails = mongoose.model('invoiceDetails', invoiceDetailsSchema);
 
-module.exports = InvoiceDetails;
+module.exports = mongoose.model('InvoiceDetail', invoiceDetailSchema);
