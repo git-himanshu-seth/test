@@ -5,7 +5,7 @@ const catchAsync = require('../../utils/catchAsync');
 exports.createInvoice = catchAsync(async (req, res) => {
   const data = req.body;
 
-  const invoice = await InvoiceMaster.createOne({
+  const invoice = await InvoiceMaster.create({
     customerName: data[0].customerName,
     totalAmount: data.reduce((sum, item) => {
       sum += item.totalAmount;
